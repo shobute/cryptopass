@@ -5,10 +5,10 @@ you remember your secret key.)
 Algorithm
 ---------
 
-    password = base64(pbkdf2(secret, username@url))
+    password = base64(pbkdf2(secret, hint))
 
 (return first max password length characters)
-PBKDF2 uses SHA-256, 5000 iterations.
+PBKDF2 uses SHA-256, 1M iterations.
 
 License
 --------
