@@ -751,12 +751,10 @@ sjcl.codec.base64url = {
 
 function makePassword() {
 	var secret = document.getElementById('secret').value;
-	var username = document.getElementById('username').value;
-	var url = document.getElementById('url').value;
+	var salt = document.getElementById('hint').value;
 	var length = document.getElementById('length').value;
-  var salt = username + '@' + url;
   var binLength = Math.ceil(length/4*3);
-  return sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(secret, salt, 5000, binLength * 8)).substring(0, length);
+  return sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(secret, salt, 1000000, binLength * 8)).substring(0, length);
 }
 
 
@@ -823,7 +821,6 @@ function fillPassword() {
     showPleaseWait();
     document.querySelector("#main-form").style.display = "none";
     setTimeout(function() {
-        var username = document.getElementById('username').value || "";
         var password = makePassword();
         chrome.tabs.executeScript(null, {code:
             "(function() {                                                                       " +
@@ -838,9 +835,6 @@ function fillPassword() {
             "      var input = inputs[j];                                                        " +
             "      if (input.type.toLowerCase() === 'password') {                                " +
             "        input.value = decodeURIComponent(\"" + encodeURIComponent(password) + "\"); " +
-            "      } else if (input.name.toLowerCase().match(/login|username|email|user/)        " +
-            "                 && input.type.toLowerCase().match(/text|email|tel/)) {             " +
-            "        input.value = decodeURIComponent(\"" + encodeURIComponent(username) + "\"); " +
             "      }                                                                             " +
             "    }                                                                               " +
             "  }                                                                                 " +
